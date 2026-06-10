@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../domain/entities/character.dart';
 
 class CharacterModel extends Character {
@@ -39,7 +41,54 @@ class CharacterModel extends Character {
     );
   }
 
+  factory CharacterModel.fromMap(Map<String, dynamic> map) {
+    final episodesJson = map['episodes'] as String? ?? '[]';
+
+    return CharacterModel(
+      id: map['id'] as int,
+      name: map['name'] as String? ?? 'Unknown',
+      status: map['status'] as String? ?? 'Unknown',
+      species: map['species'] as String? ?? 'Unknown',
+      type: map['type'] as String? ?? '',
+      gender: map['gender'] as String? ?? 'Unknown',
+      originName: map['originName'] as String? ?? 'Unknown',
+      locationName: map['locationName'] as String? ?? 'Unknown',
+      imageUrl: map['imageUrl'] as String? ?? '',
+      episodes: List<String>.from(jsonDecode(episodesJson)),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'status': status,
+      'species': species,
+      'type': type,
+      'gender': gender,
+      'originName': originName,
+      'locationName': locationName,
+      'imageUrl': imageUrl,
+      'episodes': jsonEncode(episodes),
+    };
+  }
+
   Character toEntity() {
     return this;
+  }
+
+  factory CharacterModel.fromEntity(Character character) {
+    return CharacterModel(
+      id: character.id,
+      name: character.name,
+      status: character.status,
+      species: character.species,
+      type: character.type,
+      gender: character.gender,
+      originName: character.originName,
+      locationName: character.locationName,
+      imageUrl: character.imageUrl,
+      episodes: character.episodes,
+    );
   }
 }
