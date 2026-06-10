@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../core/states/screen_state.dart';
-import '../../../domain/entities/character.dart';
-import '../../../data/repositories/character_repository.dart';
+import '../../core/states/screen_state.dart';
+import '../../domain/entities/character.dart';
+import '../../data/repositories/character_repository.dart';
 
 class CharacterListViewModel extends ChangeNotifier {
   final CharacterRepository repository;

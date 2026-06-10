@@ -5,26 +5,46 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
-import 'package:character_explorer/main.dart';
+import 'package:character_explorer/app.dart';
+import 'package:character_explorer/data/repositories/character_repository.dart';
+import 'package:character_explorer/domain/entities/character.dart';
+import 'package:character_explorer/presentation/viewmodels/character_list_view_model.dart';
+
+class FakeCharacterRepository implements CharacterRepository {
+  @override
+  Future<List<Character>> getCharacters({String? name}) async => [];
+
+  @override
+  Future<Character> getCharacterById(int id) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<void> addToFavorites(Character character) async {}
+
+  @override
+  Future<void> removeFromFavorites(int id) async {}
+
+  @override
+  Future<bool> isFavorite(int id) async => false;
+
+  @override
+  Future<List<Character>> getFavoriteCharacters() async => [];
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App builds and shows character list screen',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) =>
+            CharacterListViewModel(repository: FakeCharacterRepository()),
+        child: const CharacterExplorerApp(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Character Explorer'), findsOneWidget);
   });
 }
